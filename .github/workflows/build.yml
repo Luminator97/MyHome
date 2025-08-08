@@ -1,0 +1,55 @@
+
+name: Build MyHome
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      # If wrapper JAR is missing (we can't ship it), bootstrap it then use ./gradlew
+      - name: Bootstrap Gradle Wrapper JAR
+        run: |
+          set -eux
+          if [ ! -f gradle/wrapper/gradle-wrapper.jar ]; then
+            curl -L -o gradle.zip https://services.gradle.org/distributions/gradle-8.9-bin.zip
+            unzip -q gradle.zip -d $HOME
+            echo "$HOME/gradle-8.9/bin" >> $GITHUB_PATH
+            gradle wrapper --gradle-version 8.9
+            chmod +x ./gradlew
+          fi
+          ls -la gradle/wrapper || true
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/actions/wrapper-validation@v3
+
+      - name: Build (wrapper)
+        run: |
+          set -eux
+          ./gradlew build --no-daemon --stacktrace
+          echo "=== Built files ==="
+          find build -maxdepth 3 -type f -print
+
+      - name: Upload plugin artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MyHome-${{ github.sha }}
+          path: |
+            build/libs/*.jar
+            build/libs/**/*.jar
+          if-no-files-found: error

@@ -1,0 +1,14 @@
+name: MyHome
+main: dev.treehouse.myhome.MyHomePlugin
+version: ${version}
+api-version: "1.21"
+author: Zach & LLM Assistant
+permissions:
+  MyHome.admin:
+    description: Allows managing others' homes, bypass limits, and reload
+    default: op
+commands:
+  home:
+    description: Home management
+    usage: "/home <name | player:name | set|create|add <name> [--override] | delete|del|rem|remove <name> | invite|inv <home> <player> | uninvite|uninv <home> <player> | public|pub <home> | private|priv <home> | list <mine|public|invited> [page] | clear [player] | bed | reload>"
+    aliases: [homes]
