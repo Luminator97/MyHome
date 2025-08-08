@@ -2,7 +2,7 @@ name: MyHome
 main: dev.treehouse.myhome.MyHomePlugin
 version: ${version}
 api-version: "1.21"
-author: Zach & LLM Assistant
+author: Luminator97
 permissions:
   MyHome.admin:
     description: Allows managing others' homes, bypass limits, and reload
