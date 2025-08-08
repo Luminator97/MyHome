@@ -1,16 +1,28 @@
 package dev.treehouse.myhome;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class Text {
-    private final String prefix;
-    private final MiniMessage mm = MiniMessage.miniMessage();
-    public Text(String prefix) { this.prefix = prefix == null ? "" : prefix; }
-    public void send(CommandSender s, String msg) {
-        s.sendMessage(mm.deserialize(prefix + msg));
+    private final String rawPrefix;   // e.g. "&a&lHome&r &8≫ &7"
+    private final String prefix;      // translated to section-colors
+
+    public Text(String prefixFromConfig) {
+        this.rawPrefix = prefixFromConfig == null ? "" : prefixFromConfig;
+        this.prefix = ChatColor.translateAlternateColorCodes('&', this.rawPrefix);
     }
-    public Component comp(String s) { return mm.deserialize(s); }
-    public String prefixRaw() { return prefix; }
+
+    /** Send with prefix. Supports & color codes in message. */
+    public void send(CommandSender s, String msgWithAmpColors) {
+        String body = ChatColor.translateAlternateColorCodes('&', msgWithAmpColors);
+        s.sendMessage(prefix + body);
+    }
+
+    /** Translate & codes without prefix (for building lines). */
+    public String color(String s) {
+        return ChatColor.translateAlternateColorCodes('&', s);
+    }
+
+    public String prefixRaw() { return rawPrefix; }
+    public String prefixColored() { return prefix; }
 }
