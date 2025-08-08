@@ -1,2 +1,8 @@
-chatPrefix: "<lime><bold>Home<reset> <dark_gray>≫<reset><light_gray> "
+# Colors use '&' codes (Bukkit). Example below: green bold "Home", dark gray chevron, then gray text.
+chatPrefix: "&a&lHome&r &8≫ &7"
+
+# Max number of private homes for non-admins.
 maxHomes: 8
+
+# Lines per page for list commands (mine/public/invited).
+pageSize: 8
