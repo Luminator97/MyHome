@@ -1,30 +1,24 @@
 package dev.treehouse.myhome;
 
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 
 public class Text {
+    private final String rawPrefix;   // e.g. "&a&lHome&r &8≫ &7"
+    private final String prefix;      // translated (§ codes)
 
-    public static String format(String message) {
-        return ChatColor.translateAlternateColorCodes('&', message);
+    public Text(String prefixFromConfig) {
+        this.rawPrefix = prefixFromConfig == null ? "" : prefixFromConfig;
+        this.prefix   = ChatColor.translateAlternateColorCodes('&', this.rawPrefix);
     }
 
-    public static String prefix() {
-        return format("&a&lHome &7");
+    /** Send with prefix. Message may also contain & color codes. */
+    public void send(CommandSender s, String msgWithAmpColors) {
+        String body = ChatColor.translateAlternateColorCodes('&', msgWithAmpColors);
+        s.sendMessage(prefix + body);
     }
 
-    public static String noHomes() {
-        return prefix() + format("&eNo my homes available!");
-    }
-
-    public static String setHome(String homeName) {
-        return prefix() + format("&7Set home &e" + homeName + " &7to your current location!");
-    }
-
-    public static String teleported() {
-        return prefix() + format("&7You have been teleported!");
-    }
-
-    public static String noPublicHomes() {
-        return prefix() + format("&eNo public homes available!");
-    }
+    /** If you ever need the colored prefix alone. */
+    public String prefixColored() { return prefix; }
+    public String prefixRaw()     { return rawPrefix; }
 }
