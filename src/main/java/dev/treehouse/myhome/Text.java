@@ -4,7 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class Text {
-    private final String rawPrefix;   // e.g. "&a&lHome&r &8≫ &7"
+    private final String rawPrefix;   // e.g. "&a&lHome&r  &8≫ &7"
     private final String prefix;      // translated to section-colors
 
     public Text(String prefixFromConfig) {
