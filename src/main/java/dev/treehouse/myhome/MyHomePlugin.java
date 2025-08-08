@@ -2,20 +2,25 @@ package dev.treehouse.myhome;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class MyHomePlugin extends JavaPlugin {
-    private static MyHomePlugin instance;
+public class MyHomePlugin extends JavaPlugin {
+
     private Storage storage;
-    private Text t;
+    private Text text;
 
     @Override
     public void onEnable() {
-        instance = this;
+        // config with &-colors
         saveDefaultConfig();
-        this.t = new Text(getConfig().getString("chatPrefix", "<green>[Home] </green>"));
-        this.storage = new Storage(this);
-        storage.load();
 
-        var cmd = new HomeCommand(this, storage, t);
+        // data store (loads data.yml automatically)
+        storage = new Storage(this);
+
+        // chat prefix helper
+        String prefix = getConfig().getString("chatPrefix", "&a&lHome&r &8≫ &7");
+        text = new Text(prefix);
+
+        // command executor + tab complete
+        HomeCommand cmd = new HomeCommand(this, storage, text);
         getCommand("home").setExecutor(cmd);
         getCommand("home").setTabCompleter(cmd);
 
@@ -24,10 +29,7 @@ public final class MyHomePlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        storage.save();
+        // No explicit save needed; Storage saves on every mutation.
+        getLogger().info("MyHome disabled.");
     }
-
-    public static MyHomePlugin inst() { return instance; }
-    public Storage storage() { return storage; }
-    public Text text() { return t; }
 }
