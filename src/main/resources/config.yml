@@ -1,4 +1,5 @@
-# Colors use '&' codes (Bukkit). Example below: green bold "Home", dark gray chevron, then gray text.
+# Use Minecraft legacy color codes with '&' (Bukkit will translate them).
+# Example: green bold "Home", dark gray chevron, then gray body text.
 chatPrefix: "&a&lHome&r &8≫ &7"
 
 # Max number of private homes for non-admins.
