@@ -45,6 +45,7 @@ public class HomeCommand implements TabExecutor {
 
         String joined = String.join(" ", args);
 
+        // /home player:name (teleport to public or invited home)
         if (joined.contains(":") && args.length == 1) {
             String[] split = joined.split(":", 2);
             String ownerName = split[0];
@@ -84,13 +85,13 @@ public class HomeCommand implements TabExecutor {
                     }
                     String name = args[1].toLowerCase(Locale.ROOT);
                     if (isReserved(name)) {
-                        t.send(p, "You can not set a home with the name "" + name + """);
+                        t.send(p, "You can not set a home with the name \"" + name + "\"");
                         return true;
                     }
                     boolean override = args.length >= 3 && args[2].equalsIgnoreCase("--override");
 
                     if (!override && storage.hasHome(u, name)) {
-                        t.send(p, "You already have a home named "" + name + "". Use "--override" to reset it to your current location!");
+                        t.send(p, "You already have a home named \"" + name + "\". Use \"--override\" to reset it to your current location!");
                         return true;
                     }
 
@@ -104,8 +105,8 @@ public class HomeCommand implements TabExecutor {
 
                     storage.setHome(u, name, p.getLocation());
                     t.send(p, override
-                            ? "Reset home "" + name + "" to your current location!"
-                            : "Set home "" + name + "" to your current location!");
+                            ? "Reset home \"" + name + "\" to your current location!"
+                            : "Set home \"" + name + "\" to your current location!");
                     return true;
                 }
 
@@ -119,7 +120,7 @@ public class HomeCommand implements TabExecutor {
                     }
                     String name = args[1].toLowerCase(Locale.ROOT);
                     if (!storage.hasHome(u, name)) {
-                        t.send(p, "You do not have a home named "" + name + """);
+                        t.send(p, "You do not have a home named \"" + name + "\"");
                         return true;
                     }
                     boolean wasPublic = storage.isPublic(u, name);
@@ -132,7 +133,7 @@ public class HomeCommand implements TabExecutor {
                     for (OfflinePlayer op : Bukkit.getOfflinePlayers()) {
                         storage.uninvite(op.getUniqueId(), u, name);
                     }
-                    t.send(p, "Your home "" + name + "" has been deleted!");
+                    t.send(p, "Your home \"" + name + "\" has been deleted!");
                     return true;
                 }
 
@@ -146,7 +147,7 @@ public class HomeCommand implements TabExecutor {
                     String targetName = args[2];
 
                     if (!storage.hasHome(u, name)) {
-                        t.send(p, "Cannot invite " + targetName + " to "" + name + "" because it does not exist");
+                        t.send(p, "Cannot invite " + targetName + " to \"" + name + "\" because it does not exist");
                         return true;
                     }
                     if (storage.isPublic(u, name)) {
@@ -162,7 +163,7 @@ public class HomeCommand implements TabExecutor {
 
                     UUID target = tu.get();
                     if (storage.isInvited(target, u, name)) {
-                        t.send(p, "You cannot invite " + Storage.nameOf(target) + " to "" + name + "" because they are already invited!");
+                        t.send(p, "You cannot invite " + Storage.nameOf(target) + " to \"" + name + "\" because they are already invited!");
                         return true;
                     }
                     if (storage.getHomeAmt(u) <= 0) {
@@ -171,10 +172,10 @@ public class HomeCommand implements TabExecutor {
                     }
 
                     storage.invite(target, u, name);
-                    t.send(p, "You have added " + Storage.nameOf(target) + " to "" + name + """);
+                    t.send(p, "You have added " + Storage.nameOf(target) + " to \"" + name + "\"");
                     Player tp = Bukkit.getPlayer(target);
                     if (tp != null) {
-                        t.send(tp, "You have been added to " + p.getName() + "'s home "" + name + "", use "/home " + p.getName() + ":" + name + "" to get there!");
+                        t.send(tp, "You have been added to " + p.getName() + "'s home \"" + name + "\", use \"/home " + p.getName() + ":" + name + "\" to get there!");
                     }
                     return true;
                 }
@@ -189,11 +190,11 @@ public class HomeCommand implements TabExecutor {
                     String targetName = args[2];
 
                     if (!storage.hasHome(u, name)) {
-                        t.send(p, "Cannot uninvite " + targetName + " to "" + name + "" because it does not exist!");
+                        t.send(p, "Cannot uninvite " + targetName + " to \"" + name + "\" because it does not exist!");
                         return true;
                     }
                     if (storage.isPublic(u, name)) {
-                        t.send(p, "Cannot uninvite " + targetName + " from "" + name + "" because it is Public!");
+                        t.send(p, "Cannot uninvite " + targetName + " from \"" + name + "\" because it is Public!");
                         return true;
                     }
 
@@ -204,11 +205,11 @@ public class HomeCommand implements TabExecutor {
                     }
                     UUID target = tu.get();
                     if (!storage.isInvited(target, u, name)) {
-                        t.send(p, "Cannot uninvite " + Storage.nameOf(target) + " from "" + name + "" because they are not invited!");
+                        t.send(p, "Cannot uninvite " + Storage.nameOf(target) + " from \"" + name + "\" because they are not invited!");
                         return true;
                     }
                     storage.uninvite(target, u, name);
-                    t.send(p, "You have uninvited " + Storage.nameOf(target) + " from "" + name + ""!");
+                    t.send(p, "You have uninvited " + Storage.nameOf(target) + " from \"" + name + "\"!");
                     return true;
                 }
 
@@ -220,15 +221,15 @@ public class HomeCommand implements TabExecutor {
                     }
                     String name = args[1].toLowerCase(Locale.ROOT);
                     if (!storage.hasHome(u, name)) {
-                        t.send(p, "You do not have a home named "" + name + """);
+                        t.send(p, "You do not have a home named \"" + name + "\"");
                         return true;
                     }
                     if (storage.isPublic(u, name)) {
-                        t.send(p, "Cannot make "" + name + "" public because it already is!");
+                        t.send(p, "Cannot make \"" + name + "\" public because it already is!");
                         return true;
                     }
                     storage.makePublic(u, name);
-                    t.send(p, "You have set "" + name + "" to Public!");
+                    t.send(p, "You have set \"" + name + "\" to Public!");
                     if (!isAdmin(p)) {
                         storage.addHomeAmt(u, -1);
                     }
@@ -243,18 +244,18 @@ public class HomeCommand implements TabExecutor {
                     }
                     String name = args[1].toLowerCase(Locale.ROOT);
                     if (!storage.isPublic(u, name)) {
-                        t.send(p, "Cannot privatize "" + name + "" because it already is!");
+                        t.send(p, "Cannot privatize \"" + name + "\" because it already is!");
                         return true;
                     }
                     if (!isAdmin(p)) {
                         if (storage.getHomeAmt(u) >= maxHomes()) {
-                            t.send(p, "Cannot privatize "" + name + "" because you are at your max amount of homes! Remove one or delete this one");
+                            t.send(p, "Cannot privatize \"" + name + "\" because you are at your max amount of homes! Remove one or delete this one");
                             return true;
                         }
                         storage.addHomeAmt(u, 1);
                     }
                     storage.makePrivate(u, name);
-                    t.send(p, "You have made "" + name + "" private!");
+                    t.send(p, "You have made \"" + name + "\" private!");
                     return true;
                 }
 
@@ -327,6 +328,7 @@ public class HomeCommand implements TabExecutor {
                 }
             }
 
+            // Fallback: teleport to own home by name
             String name = args[0].toLowerCase(Locale.ROOT);
             if (storage.hasHome(u, name)) {
                 Location loc = storage.getHome(u, name);
@@ -348,20 +350,17 @@ public class HomeCommand implements TabExecutor {
     private boolean listMineDefault(Player p) {
         UUID u = p.getUniqueId();
         List<String> names = storage.getHomeNames(u).stream().sorted(String.CASE_INSENSITIVE_ORDER).toList();
-        int total = names.size();
-        if (total == 0) {
+        if (names.isEmpty()) {
             t.send(p, "<yellow>No homes available!</yellow>");
             return true;
         }
         t.send(p, "&e--- My Homes (" + storage.getHomeAmt(u) + "/" + maxHomes() + ") ---".replace("&","§"));
-        int i = 1;
         for (String nm : names.stream().limit(maxHomes()).toList()) {
             boolean pub = storage.isPublic(u, nm);
             String state = pub ? "<light_blue><bold>Public</bold></light_blue>" : "<light_red><bold>Private</bold></light_red>";
             var line = t.comp(state + " <gray>|</gray> <light_green><underlined>" + nm + "</underlined>")
                     .clickEvent(ClickEvent.runCommand("/home " + nm));
             p.sendMessage(line);
-            i++;
         }
         return true;
     }
