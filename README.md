@@ -1,65 +1,80 @@
 # MyHome
 
-**Author:** Lumnator97  
-**Version:** 1.0.0-dev  
-A fully featured Minecraft home management plugin for Paper/Spigot servers, designed for simplicity and flexibility.  
-Supports **private homes**, **public homes**, **invitations**, clickable teleport links, and stores exact player yaw/pitch for perfect facing when teleporting.
+**Author:** Luminator97  
+**A clean, fast home system for Paper/Spigot.**  
+Everything hangs off one command: `/home <action> [args]`.  
+Supports private/public homes, invites, clickable lists, and precise yaw/pitch teleports. Saves to `data.yml` instantly on every change.
 
 ---
 
-## 📦 Features
+## Features
 
-- **Set unlimited homes** (or limit them via `config.yml`)
-- **Private or public homes** – share with everyone or keep them to yourself
-- **Invite specific players** to private homes
-- **Clickable teleport in chat** when listing homes
-- **Yaw & pitch saving** – you'll face the same way when returning
-- **Simple, clean formatting** using Minecraft `&` color codes
-- **All data stored in `data.yml`** (easy to edit if needed)
-- Configurable **prefix**, **max homes**, and more
-
----
-
-## ⚙️ How It Works
-
-1. **Set a home** anywhere using `/sethome <name>`.
-2. **Teleport** back with `/home <name>` or click its name in `/homes`.
-3. **Make public** with `/publichome <name>` so everyone can visit.
-4. **Invite** specific players with `/invitehome <player> <name>`.
-5. **List** your own homes, public homes, or invitations with `/homes`, `/publichomes`, or `/invitedhomes`.
-6. **Delete** any home you no longer need with `/delhome <name>`.
+- `/home` with subcommands (one command to rule them all)
+- Save + TP with exact yaw/pitch
+- Public vs private homes
+- Per‑player invites to private homes
+- Clickable lists: click a home name to teleport
+- Color formatting with classic `&` codes
+- Simple config: prefix, limits, page size
+- No janky counters; limits based on actual private homes
 
 ---
 
-## 📜 Commands
+## Commands
 
-| Command | Description |
-|---------|-------------|
-| `/sethome <name>` | Set a home at your current location. |
-| `/home <name>` | Teleport to a saved home. |
-| `/homes` | List your homes (click to teleport). |
-| `/delhome <name>` | Delete a home you own. |
-| `/publichome <name>` | Make one of your homes public. |
-| `/privatehome <name>` | Make a public home private again. |
-| `/publichomes` | List all public homes on the server. |
-| `/invitehome <player> <name>` | Invite a player to a private home. |
-| `/uninvitehome <player> <name>` | Remove a player’s invite to a home. |
-| `/invitedhomes` | List homes you’ve been invited to. |
-| `/clearhomes` | **Admin:** Clear all of a player's homes/invites. |
+_All commands start with **`/home`**._
+
+### Teleport & Basics
+- **`/home`** — List **your** homes (click to teleport).
+- **`/home <name>`** — Teleport to your home named `<name>`.
+- **`/home bed`** — Teleport to your bed (if set).
+- **`/home <owner>:<name>`** — Teleport to someone else’s home if it’s **public** or you’re **invited**.
+
+### Managing Homes
+- **`/home set <name> [--override]`** — Create a home at your location (use `--override` to reset an existing one).
+- **`/home delete|del|remove|rem <name>`** — Delete one of your homes.
+- **`/home public|pub <name>`** — Make one of your homes public.
+- **`/home private|priv <name>`** — Make a public home private again.
+  - Limits apply only to **private** homes. If you hit the limit, make one public or delete one.
+
+### Invites
+- **`/home invite|inv <home> <player>`** — Invite a player to a **private** home.
+- **`/home uninvite|uninv <home> <player>`** — Remove a player’s invite.
+- Invited players can use: **`/home <owner>:<home>`**
+
+### Lists (with pagination)
+- **`/home list mine [page]`** — List your homes.  
+  - If you’re **admin**, shows paged view; otherwise you get a compact list.
+- **`/home list public [page]`** — List all public homes on the server.
+- **`/home list invited [page]`** — List homes you’re invited to.
+
+### Admin / Utility
+- **`/home clear [player]`** — Clear **your** homes; with permission, clear someone else’s.
+- **`/home reload`** — Reload config (admin only).
 
 ---
 
-## 🛠️ Configuration
+## Permissions
 
-Located in `plugins/MyHome/config.yml`:
+- **`MyHome.admin`**
+  - Use `/home reload`
+  - Use `/home clear <player>`
+  - Bypass private‑home limit when toggling
+  - See admin‑style paginated “mine” list
+
+_No other permissions are required. Regular players can use everything else._
+
+---
+
+## Config (`config.yml`)
 
 ```yaml
-# Chat prefix for all plugin messages
-prefix: "&7[&bMyHome&7] "
+# Message prefix (supports & color codes)
+chatPrefix: "&a&lHome&r &8≫ &7"
 
-# Maximum number of private homes a player can have
-# (set to -1 for unlimited)
-max-homes: 5
+# Max number of PRIVATE homes for non-admins.
+# Public homes do not count toward the limit.
+maxHomes: 8
 
-# Should teleport use exact yaw/pitch saved with the home?
-use-precise-facing: true
+# Rows per page for paged lists (public/invited/admin-mine)
+pageSize: 8
