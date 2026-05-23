@@ -1,6 +1,7 @@
 plugins {
     java
-    id("io.papermc.paperweight.userdev") version "1.7.1"
+    // Removed the paperweight plugin because depending on it makes 
+    // cross-version compatibility much harder.
 }
 
 group = "dev.treehouse"
@@ -13,7 +14,12 @@ repositories {
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
+    // Replaced paperDevBundle with paper-api. 
+    // compileOnly ensures it's used for building but not packaged in your jar.
+    // You can update "1.21.1" to a newer version here if you need newer API features,
+    // but building against 1.21.1 will still run perfectly on newer versions!
+    compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT") 
+    
     implementation("net.kyori:adventure-text-minimessage:4.17.0")
 }
 
