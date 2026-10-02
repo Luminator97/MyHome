@@ -10,5 +10,5 @@ permissions:
 commands:
   home:
     description: Home management
-    usage: "/home <name | player:name | set|create|add <name> [--override] | delete|del|rem|remove <name> | invite|inv <home> <player> | uninvite|uninv <home> <player> | public|pub <home> | private|priv <home> | list <mine|public|invited> [page] | clear [player] | bed | reload>"
+    usage: "/home <name | player:name | set|create|add <name> [--override] | rename|ren <old> <new> | delete|del|rem|remove <name> | invite|inv <home> <player> | uninvite|uninv <home> <player> | public|pub <home> | private|priv <home> | list <mine|public|invited> [page] | clear [confirm|<player>] | bed | admin <player> <set|rename|delete|invite|uninvite|public|private|list|clear> [args] | reload | help>"
     aliases: [homes]
