@@ -106,6 +106,37 @@ public class Storage {
         save();
     }
 
+    /** Rename a home, migrating its public entry and all invite references. */
+    public void renameHome(UUID owner, String oldName, String newName) {
+        String oldBase = homesBase(owner) + "." + oldName;
+        String newBase = homesBase(owner) + "." + newName;
+        var sec = yml.getConfigurationSection(oldBase);
+        if (sec == null) return;
+        for (String key : sec.getKeys(false)) {
+            yml.set(newBase + "." + key, sec.get(key));
+        }
+        yml.set(oldBase, null);
+        // migrate public entry
+        List<String> pub = new ArrayList<>(getPublicList(owner));
+        if (pub.remove(oldName)) {
+            pub.add(newName);
+            yml.set(publicBase(owner), pub);
+        }
+        // migrate invite references
+        var invSec = yml.getConfigurationSection("invited");
+        if (invSec != null) {
+            for (String key : invSec.getKeys(false)) {
+                UUID target = UUID.fromString(key);
+                List<String> inv = new ArrayList<>(getInvited(target));
+                if (inv.remove(owner + ":" + oldName)) {
+                    inv.add(owner + ":" + newName);
+                    yml.set(invitedBase(target), inv);
+                }
+            }
+        }
+        save();
+    }
+
     public List<String> getHomeNames(UUID owner) {
         var sec = yml.getConfigurationSection(homesBase(owner));
         if (sec == null) return List.of();
